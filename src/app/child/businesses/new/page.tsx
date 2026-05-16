@@ -1,51 +1,98 @@
+"use client";
+
 import { PageCard, PageHeader, PageShell } from "@/components/ui-shell/page-shell";
+import { Button } from "@/components/ui/button";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function NewBusinessPage() {
   return (
     <PageShell>
       <PageCard>
-      <div className="max-w-2xl">
-        <PageHeader title="Buat Usaha Baru" description="Mulai dari usaha sederhana dulu. Nanti detail lain bisa dilengkapi bertahap." />
+        <div className="max-w-2xl">
+          <PageHeader
+            title="Buat Usaha Baru"
+            description="Mulai dari usaha sederhana dulu. Nanti detail lain bisa dilengkapi bertahap."
+          />
 
-        <form className="mt-8 space-y-5">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#111827]">Nama usaha</label>
-            <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-[#4F46E5]" placeholder="Contoh: Stiker Keren" />
-          </div>
+          <form className="mt-8 flex flex-col gap-5" noValidate>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="biz-name">Nama usaha</FieldLabel>
+                <Input
+                  id="biz-name"
+                  placeholder="Contoh: Stiker Keren"
+                  required
+                  className="h-auto min-h-11 rounded-2xl px-4 py-3"
+                />
+              </Field>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#111827]">Jenis usaha</label>
-            <select className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-[#4F46E5]">
-              <option>Simulasi</option>
-              <option>Nyata</option>
-            </select>
-          </div>
+              <Field>
+                <FieldLabel htmlFor="biz-kind">Jenis usaha</FieldLabel>
+                <Select defaultValue="simulasi">
+                  <SelectTrigger id="biz-kind" size="default" className="h-auto min-h-11 w-full rounded-2xl px-4 py-3">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="simulasi">Simulasi</SelectItem>
+                      <SelectItem value="nyata">Nyata</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </Field>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#111827]">Kategori</label>
-            <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-[#4F46E5]" placeholder="Contoh: Kerajinan" />
-          </div>
+              <Field>
+                <FieldLabel htmlFor="biz-category">Kategori</FieldLabel>
+                <Input
+                  id="biz-category"
+                  placeholder="Contoh: Kerajinan"
+                  className="h-auto min-h-11 rounded-2xl px-4 py-3"
+                />
+              </Field>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#111827]">Modal awal</label>
-            <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-[#4F46E5]" placeholder="Contoh: 100000" />
-          </div>
+              <Field>
+                <FieldLabel htmlFor="biz-capital">Modal awal</FieldLabel>
+                <Input
+                  id="biz-capital"
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  placeholder="Contoh: 100000"
+                  className="h-auto min-h-11 rounded-2xl px-4 py-3"
+                />
+                <FieldDescription>Dalam Rupiah (tanpa titik atau koma).</FieldDescription>
+              </Field>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#111827]">Deskripsi singkat</label>
-            <textarea className="min-h-28 w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-[#4F46E5]" placeholder="Ceritakan usaha ini secara singkat" />
-          </div>
+              <Field>
+                <FieldLabel htmlFor="biz-desc">Deskripsi singkat</FieldLabel>
+                <Textarea
+                  id="biz-desc"
+                  placeholder="Ceritakan usaha ini secara singkat"
+                  className="min-h-28 rounded-2xl px-4 py-3 text-base md:text-sm"
+                />
+              </Field>
+            </FieldGroup>
 
-          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-            <button type="button" className="min-h-12 rounded-full bg-[#4F46E5] px-6 text-sm font-semibold text-white">
-              Simpan Usaha
-            </button>
-            <button type="button" className="min-h-12 rounded-full border border-slate-300 px-6 text-sm font-semibold text-[#111827]">
-              Batal
-            </button>
-          </div>
-        </form>
-      </div>
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+              <Button type="submit" className="min-h-12 rounded-full px-6 text-sm font-semibold">
+                Simpan Usaha
+              </Button>
+              <Button type="button" variant="outline" className="min-h-12 rounded-full px-6 text-sm font-semibold">
+                Batal
+              </Button>
+            </div>
+          </form>
+        </div>
       </PageCard>
     </PageShell>
   );

@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+import { SEED_CHILD_NAYA_ID, SEED_FIRST_BUSINESS_ID } from "@/lib/demo-context";
+
 export type AppMode = "parent" | "child";
 
 interface AppState {
@@ -7,7 +9,6 @@ interface AppState {
   activeChildId: string | null;
   activeBusinessId: string | null;
 
-  // Actions
   setMode: (mode: AppMode) => void;
   setActiveChildId: (childId: string | null) => void;
   setActiveBusinessId: (businessId: string | null) => void;
@@ -15,8 +16,8 @@ interface AppState {
 
 export const useAppStore = create<AppState>((set) => ({
   mode: "parent",
-  activeChildId: "child-naya", // Default for demo
-  activeBusinessId: "stiker-keren", // Default for demo
+  activeChildId: SEED_CHILD_NAYA_ID,
+  activeBusinessId: SEED_FIRST_BUSINESS_ID,
 
   setMode: (mode) => set({ mode }),
   setActiveChildId: (childId) => set({ activeChildId: childId }),

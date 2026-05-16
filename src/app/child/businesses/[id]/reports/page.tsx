@@ -1,21 +1,17 @@
-"use client";
-
-import { use } from "react";
+import { notFound } from "next/navigation";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { PageCard, PageHeader, PageShell } from "@/components/ui-shell/page-shell";
-import { getBusinessById } from "@/lib/mock-data";
-import { useAppStore } from "@/stores/app-store";
+import { findBusinessOverviewById } from "@/server/repositories/business.repository";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function BusinessReportsPage({ params }: PageProps) {
-  const { id } = use(params);
-  const { activeBusinessId } = useAppStore();
-  const business = getBusinessById(id) ?? getBusinessById(activeBusinessId ?? "");
-  const businessName = business?.name ?? "Usaha";
+export default async function BusinessReportsPage({ params }: PageProps) {
+  const { id } = await params;
+  const business = await findBusinessOverviewById(id);
+  if (!business) notFound();
 
   return (
     <PageShell>
@@ -23,7 +19,7 @@ export default function BusinessReportsPage({ params }: PageProps) {
         items={[
           { label: "Dashboard", href: "/child/dashboard" },
           { label: "Usaha", href: "/child/businesses" },
-          { label: businessName },
+          { label: business.name, href: `/child/businesses/${business.id}` },
           { label: "Laporan" },
         ]}
       />
@@ -31,10 +27,13 @@ export default function BusinessReportsPage({ params }: PageProps) {
       <PageCard>
         <PageHeader
           eyebrow="Laporan"
-          title={`Ringkasan usaha · ${businessName}`}
+          title={`Ringkasan usaha · ${business.name}`}
           description="Ringkasan performa sementara dari usaha aktif."
           action={
-            <button className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-300 px-5 text-sm font-semibold text-[#111827]">
+            <button
+              type="button"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-border-subtle px-5 text-sm font-semibold text-foreground"
+            >
               Export PDF
             </button>
           }
@@ -42,26 +41,26 @@ export default function BusinessReportsPage({ params }: PageProps) {
       </PageCard>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <ReportCard label="Pendapatan" value="Rp125.000" tone="bg-emerald-50 text-emerald-700" />
-        <ReportCard label="Pengeluaran" value="Rp12.000" tone="bg-red-50 text-red-700" />
-        <ReportCard label="Laba sementara" value="Rp113.000" tone="bg-indigo-50 text-indigo-700" />
+        <ReportCard label="Pendapatan" value="Rp125.000" tone="bg-secondary/15 text-secondary" />
+        <ReportCard label="Pengeluaran" value="Rp12.000" tone="bg-danger/10 text-danger" />
+        <ReportCard label="Laba sementara" value="Rp113.000" tone="bg-primary-soft text-primary" />
       </section>
 
       <PageCard>
-        <h2 className="text-xl font-semibold text-[#111827]">Performa sederhana</h2>
-        <div className="mt-6 flex h-56 items-end gap-3 rounded-2xl bg-slate-50 p-4">
+        <h2 className="text-xl font-semibold text-foreground">Performa sederhana</h2>
+        <div className="mt-6 flex h-56 items-end gap-3 rounded-2xl bg-surface p-4">
           {[65, 92, 54, 120, 86, 145, 110].map((height, index) => (
             <div key={index} className="flex flex-1 flex-col items-center gap-2">
-              <div className="w-full rounded-t-xl bg-[#4F46E5]" style={{ height }} />
-              <div className="h-2 w-5 rounded bg-slate-300" />
+              <div className="w-full rounded-t-xl bg-primary" style={{ height }} />
+              <div className="h-2 w-5 rounded bg-border-subtle" />
             </div>
           ))}
         </div>
       </PageCard>
 
       <PageCard>
-        <h2 className="text-xl font-semibold text-[#111827]">Langkah berikutnya</h2>
-        <div className="mt-5 space-y-3">
+        <h2 className="text-xl font-semibold text-foreground">Langkah berikutnya</h2>
+        <div className="mt-5 flex flex-col gap-3">
           <StepRow text="Lihat laba rugi sederhana dari transaksi yang sudah dicatat" />
           <StepRow text="Bandingkan pemasukan dan pengeluaran" />
           <StepRow text="Siapkan export laporan saat data sudah lebih lengkap" />
@@ -81,5 +80,7 @@ function ReportCard({ label, value, tone }: { label: string; value: string; tone
 }
 
 function StepRow({ text }: { text: string }) {
-  return <div className="rounded-2xl bg-[#F9FAFB] p-4 text-sm font-medium text-[#111827]">{text}</div>;
+  return (
+    <div className="rounded-2xl bg-surface p-4 text-sm font-medium text-foreground">{text}</div>
+  );
 }
