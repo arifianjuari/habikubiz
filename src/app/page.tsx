@@ -40,6 +40,15 @@ export default function Home() {
   return (
     <div className="min-h-screen w-full bg-surface font-sans text-foreground">
       <SociabuzzSupportWidget />
+      <a
+        href="https://sociabuzz.com/habiku"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Beri dukungan melalui Sociabuzz"
+        className="fixed bottom-6 right-6 z-[9999999] inline-flex min-h-[47px] max-w-[220px] items-center justify-center rounded-full border border-[#76CC11] bg-[#76CC11] px-4 py-3 text-center text-sm font-extrabold leading-[140%] text-white shadow-xl shadow-black/20"
+      >
+        Beri dukungan
+      </a>
       <div className="mx-auto w-full max-w-[1440px] bg-background">
         <header className="sticky top-0 border-b border-border-subtle bg-background/95 px-5 py-4 backdrop-blur md:px-10 lg:px-16">
           <div className="flex items-center justify-between gap-4">
