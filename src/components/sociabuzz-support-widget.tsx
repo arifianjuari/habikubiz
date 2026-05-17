@@ -30,6 +30,10 @@ const DRAW_ARGS = [
 
 const SUPPORT_URL = "https://sociabuzz.com/habiku";
 
+/** Interval: tunggu sbBoW — jangan anggap gagal sebelum skrip siap (~12s). */
+const MAX_WAIT_SBOW_ATTEMPTS = 240;
+const POLL_MS = 50;
+
 function hasRenderedWidget() {
   return Boolean(
     document.getElementById("wrapperFloatingBtn") ||
@@ -39,16 +43,9 @@ function hasRenderedWidget() {
   );
 }
 
-function tryDrawSociabuzz(): boolean {
-  if (hasRenderedWidget()) return true;
-  const draw = window.sbBoW?.draw;
-  if (!draw) return false;
-  draw(...DRAW_ARGS);
-  return hasRenderedWidget();
-}
-
 export function SociabuzzSupportWidget() {
   const drew = useRef(false);
+  const drawInvoked = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showFallback, setShowFallback] = useState(false);
 
@@ -59,6 +56,23 @@ export function SociabuzzSupportWidget() {
     }
   }, []);
 
+  /**
+   * Sociabuzz menyisipkan #btnModal secara asinkron — jangan pakai
+   * hasRenderedWidget() langsung setelah draw() sebagai syarat sukses.
+   * - Kalau sbBoW belum ada: false (terus poll).
+   * - Kalau draw() sudah dipanggil sekali: true (henti poll; biarkan DOM tampil).
+   */
+  const tryProgress = useCallback((): boolean => {
+    if (hasRenderedWidget()) return true;
+    const draw = window.sbBoW?.draw;
+    if (!draw) return false;
+    if (!drawInvoked.current) {
+      draw(...DRAW_ARGS);
+      drawInvoked.current = true;
+    }
+    return true;
+  }, []);
+
   const initWidget = useCallback(() => {
     if (drew.current || hasRenderedWidget()) {
       drew.current = true;
@@ -67,7 +81,7 @@ export function SociabuzzSupportWidget() {
       return;
     }
 
-    if (tryDrawSociabuzz()) {
+    if (tryProgress()) {
       drew.current = true;
       setShowFallback(false);
       clearRetry();
@@ -79,19 +93,21 @@ export function SociabuzzSupportWidget() {
     let attempts = 0;
     intervalRef.current = setInterval(() => {
       attempts += 1;
-      if (tryDrawSociabuzz()) {
+      if (tryProgress()) {
         drew.current = true;
         setShowFallback(false);
         clearRetry();
-      } else if (attempts >= 80) {
+        return;
+      }
+      if (attempts >= MAX_WAIT_SBOW_ATTEMPTS) {
         clearRetry();
         setShowFallback(true);
         console.warn(
-          "[Sociabuzz] widget tidak muncul — kemungkinan diblokir adblock/shields/CSP. Menampilkan fallback button.",
+          "[Sociabuzz] sbBoW tidak siap — cek Network, adblock, atau CSP. Menampilkan fallback.",
         );
       }
-    }, 50);
-  }, [clearRetry]);
+    }, POLL_MS);
+  }, [clearRetry, tryProgress]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
