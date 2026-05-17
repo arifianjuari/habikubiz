@@ -9,6 +9,7 @@ import { useAppStore } from "@/stores/app-store";
 
 export function ChildBusinessesClient({ businesses }: { businesses: readonly BusinessOverview[] }) {
   const activeChildId = useAppStore((s) => s.activeChildId);
+  const setActiveBusinessId = useAppStore((s) => s.setActiveBusinessId);
   const filtered = businesses.filter((b) => !activeChildId || b.childId === activeChildId);
 
   const typeLabel = (t: BusinessOverview["type"]) => (t === "simulasi" ? "Simulasi" : "Nyata");
@@ -53,6 +54,7 @@ export function ChildBusinessesClient({ businesses }: { businesses: readonly Bus
             <div className="mt-5 flex gap-3">
               <Link
                 href={`/child/businesses/${business.id}`}
+                onClick={() => setActiveBusinessId(business.id)}
                 className="inline-flex min-h-11 items-center justify-center rounded-full bg-foreground px-5 text-sm font-semibold text-background"
               >
                 Buka

@@ -10,6 +10,8 @@ import {
 import { getCurrentUser } from "@/lib/supabase/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
+export type ChildEditableRow = ChildSummary & { pinIsSet: boolean };
+
 const MOCK_CHILDREN: readonly ChildSummary[] = [
   {
     id: SEED_CHILD_NAYA_ID,
@@ -41,8 +43,13 @@ export const listChildSummaries = cache(async function listChildSummaries(): Pro
     .eq("parent_user_id", user.id)
     .order("name", { ascending: true });
 
-  if (error || !data?.length) {
-    return MOCK_CHILDREN;
+  if (error) {
+    console.error("listChildSummaries:", error.message);
+    return [];
+  }
+
+  if (!data?.length) {
+    return [];
   }
 
   return data.map((row) => ({
@@ -57,4 +64,33 @@ export const listChildSummaries = cache(async function listChildSummaries(): Pro
 export const findChildSummaryById = cache(async function findChildSummaryById(id: string): Promise<ChildSummary | undefined> {
   const all = await listChildSummaries();
   return all.find((c) => c.id === id);
+});
+
+export const getChildEditableById = cache(async function getChildEditableById(id: string): Promise<ChildEditableRow | null> {
+  const supabase = await getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("children")
+    .select("id, parent_user_id, name, birth_year, initials, pin_hash")
+    .eq("id", id)
+    .eq("parent_user_id", user.id)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    parentId: data.parent_user_id,
+    name: data.name,
+    birthYear: data.birth_year,
+    initials: data.initials,
+    pinIsSet: !!data.pin_hash,
+  };
 });

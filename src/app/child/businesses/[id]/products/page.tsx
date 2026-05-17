@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { PageCard, PageHeader, PageShell } from "@/components/ui-shell/page-shell";
+import { appRoutes } from "@/lib/app-routes";
 import { findBusinessOverviewById } from "@/server/repositories/business.repository";
 
 interface PageProps {
@@ -23,9 +24,9 @@ export default async function BusinessProductsPage({ params }: PageProps) {
     <PageShell>
       <Breadcrumb
         items={[
-          { label: "Dashboard", href: "/child/dashboard" },
-          { label: "Usaha", href: "/child/businesses" },
-          { label: business.name, href: `/child/businesses/${business.id}` },
+          { label: "Dashboard", href: appRoutes.child.dashboard },
+          { label: "Usaha", href: appRoutes.child.businesses },
+          { label: business.name, href: appRoutes.child.business(business.id) },
           { label: "Produk & HPP" },
         ]}
       />

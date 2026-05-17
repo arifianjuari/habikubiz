@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { PageCard, PageHeader, PageShell } from "@/components/ui-shell/page-shell";
+import { appRoutes } from "@/lib/app-routes";
 import { formatIdr } from "@/lib/format-currency";
 import { findBusinessOverviewById } from "@/server/repositories/business.repository";
 
@@ -21,8 +22,8 @@ export default async function BusinessDetailPage({ params }: BusinessDetailPageP
     <PageShell>
       <Breadcrumb
         items={[
-          { label: "Dashboard", href: "/child/dashboard" },
-          { label: "Usaha", href: "/child/businesses" },
+          { label: "Dashboard", href: appRoutes.child.dashboard },
+          { label: "Usaha", href: appRoutes.child.businesses },
           { label: business.name },
         ]}
       />
@@ -40,23 +41,39 @@ export default async function BusinessDetailPage({ params }: BusinessDetailPageP
         />
       </PageCard>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <Link
-          href={`/child/businesses/${business.id}/products`}
+          href={appRoutes.child.products(business.id)}
           className="rounded-2xl border border-border-subtle bg-background p-5 shadow-sm transition hover:border-primary"
         >
           <h2 className="text-lg font-semibold text-foreground">Produk & HPP</h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">Kelola produk, harga jual, dan hitung HPP sederhana.</p>
         </Link>
         <Link
-          href={`/child/businesses/${business.id}/cash`}
+          href={appRoutes.child.cash(business.id)}
           className="rounded-2xl border border-border-subtle bg-background p-5 shadow-sm transition hover:border-primary"
         >
           <h2 className="text-lg font-semibold text-foreground">Buku Kas</h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">Catat pemasukan dan pengeluaran usaha setiap hari.</p>
         </Link>
         <Link
-          href={`/child/businesses/${business.id}/reports`}
+          href={appRoutes.child.assets(business.id)}
+          className="rounded-2xl border border-border-subtle bg-background p-5 shadow-sm transition hover:border-primary"
+        >
+          <h2 className="text-lg font-semibold text-foreground">Aset</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Catat aset usaha, depresiasi, dan foto perlengkapan penting.
+          </p>
+        </Link>
+        <Link
+          href={appRoutes.child.journal(business.id)}
+          className="rounded-2xl border border-border-subtle bg-background p-5 shadow-sm transition hover:border-primary"
+        >
+          <h2 className="text-lg font-semibold text-foreground">Jurnal</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Jurnal otomatis, buku besar, dan neraca saldo.</p>
+        </Link>
+        <Link
+          href={appRoutes.child.reports(business.id)}
           className="rounded-2xl border border-border-subtle bg-background p-5 shadow-sm transition hover:border-primary"
         >
           <h2 className="text-lg font-semibold text-foreground">Laporan</h2>

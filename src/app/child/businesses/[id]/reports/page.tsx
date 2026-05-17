@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { PageCard, PageHeader, PageShell } from "@/components/ui-shell/page-shell";
+import { appRoutes } from "@/lib/app-routes";
 import { findBusinessOverviewById } from "@/server/repositories/business.repository";
 
 interface PageProps {
@@ -17,9 +19,9 @@ export default async function BusinessReportsPage({ params }: PageProps) {
     <PageShell>
       <Breadcrumb
         items={[
-          { label: "Dashboard", href: "/child/dashboard" },
-          { label: "Usaha", href: "/child/businesses" },
-          { label: business.name, href: `/child/businesses/${business.id}` },
+          { label: "Dashboard", href: appRoutes.child.dashboard },
+          { label: "Usaha", href: appRoutes.child.businesses },
+          { label: business.name, href: appRoutes.child.business(business.id) },
           { label: "Laporan" },
         ]}
       />
@@ -45,6 +47,36 @@ export default async function BusinessReportsPage({ params }: PageProps) {
         <ReportCard label="Pengeluaran" value="Rp12.000" tone="bg-danger/10 text-danger" />
         <ReportCard label="Laba sementara" value="Rp113.000" tone="bg-primary-soft text-primary" />
       </section>
+
+      <PageCard>
+        <h2 className="text-xl font-semibold text-foreground">Jenis laporan (PRD Modul 7)</h2>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <Link
+            href={appRoutes.child.reportsLabaRugi(business.id)}
+            className="rounded-2xl border border-border-subtle bg-surface p-4 text-sm font-semibold text-primary hover:border-primary"
+          >
+            Laba Rugi
+          </Link>
+          <Link
+            href={appRoutes.child.reportsArusKas(business.id)}
+            className="rounded-2xl border border-border-subtle bg-surface p-4 text-sm font-semibold text-primary hover:border-primary"
+          >
+            Arus Kas
+          </Link>
+          <Link
+            href={appRoutes.child.reportsNeraca(business.id)}
+            className="rounded-2xl border border-border-subtle bg-surface p-4 text-sm font-semibold text-primary hover:border-primary"
+          >
+            Neraca
+          </Link>
+          <Link
+            href={appRoutes.child.reportsRekapAset(business.id)}
+            className="rounded-2xl border border-border-subtle bg-surface p-4 text-sm font-semibold text-primary hover:border-primary"
+          >
+            Rekap Aset
+          </Link>
+        </div>
+      </PageCard>
 
       <PageCard>
         <h2 className="text-xl font-semibold text-foreground">Performa sederhana</h2>

@@ -37,7 +37,7 @@ export function ContextShell({
       </div>
 
       <div className="grid gap-4">
-        {mode === "parent" && <ActiveChildSwitcher childSummaries={childSummaries} />}
+        {mode === "parent" && <ActiveChildSwitcher childSummaries={childSummaries} businesses={businesses} />}
         <ActiveBusinessSwitcher businesses={businesses} />
       </div>
     </div>

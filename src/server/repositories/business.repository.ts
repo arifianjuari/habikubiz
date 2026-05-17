@@ -79,8 +79,13 @@ export const listBusinessOverviews = cache(async function listBusinessOverviews(
 
   const { data, error } = await supabase.from("businesses").select("*").order("name", { ascending: true });
 
-  if (error || !data?.length) {
-    return MOCK_BUSINESSES;
+  if (error) {
+    console.error("listBusinessOverviews:", error.message);
+    return [];
+  }
+
+  if (!data?.length) {
+    return [];
   }
 
   return data.map((row) =>
@@ -112,8 +117,13 @@ export const findBusinessOverviewById = cache(async function findBusinessOvervie
 
   const { data, error } = await supabase.from("businesses").select("*").eq("id", id).maybeSingle();
 
-  if (error || !data) {
-    return MOCK_BUSINESSES.find((b) => b.id === id);
+  if (error) {
+    console.error("findBusinessOverviewById:", error.message);
+    return undefined;
+  }
+
+  if (!data) {
+    return undefined;
   }
 
   return mapBusinessRow(
@@ -143,8 +153,13 @@ export const listBusinessOverviewsByChildId = cache(async function listBusinessO
 
   const { data, error } = await supabase.from("businesses").select("*").eq("child_id", childId).order("name", { ascending: true });
 
-  if (error || !data?.length) {
-    return MOCK_BUSINESSES.filter((b) => b.childId === childId);
+  if (error) {
+    console.error("listBusinessOverviewsByChildId:", error.message);
+    return [];
+  }
+
+  if (!data?.length) {
+    return [];
   }
 
   return data.map((row) =>

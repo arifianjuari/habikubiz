@@ -1,8 +1,9 @@
 -- Contoh seed manual setelah migrasi `supabase/migrations/*`.
 -- Ganti '<YOUR_AUTH_USER_UUID>' dengan UUID dari `auth.users` (dashboard Supabase).
+-- Setelah migrasi `20260516120000_*`, baris di `public.profiles` dibuat otomatis (trigger + backfill).
 --
--- insert into public.children (id, parent_user_id, name, birth_year, initials)
--- values ('child-naya', '<YOUR_AUTH_USER_UUID>', 'Naya', 2014, 'NY');
+-- insert into public.children (id, parent_user_id, name, birth_year, initials, pin_hash)
+-- values ('child-naya', '<YOUR_AUTH_USER_UUID>', 'Naya', 2014, 'NY', null);
 --
 -- insert into public.businesses (id, child_id, name, type, category, description, initial_capital, estimated_cash_rp, tagline)
 -- values (

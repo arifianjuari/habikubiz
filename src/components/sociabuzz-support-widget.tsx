@@ -94,8 +94,13 @@ export function SociabuzzSupportWidget() {
   }, [clearRetry]);
 
   useEffect(() => {
-    initWidget();
-    return clearRetry;
+    const frame = requestAnimationFrame(() => {
+      initWidget();
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      clearRetry();
+    };
   }, [initWidget, clearRetry]);
 
   return (

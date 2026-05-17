@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { ContextShell } from "@/components/context-shell";
+import { appRoutes } from "@/lib/app-routes";
 import { cn } from "@/lib/utils";
 import { PageCard, PageHeader, PageShell } from "@/components/ui-shell/page-shell";
 import type { ParentDashboardChildRow } from "@/types/dashboard";
@@ -32,9 +33,15 @@ export function ParentDashboardClient({
           description="Pantau progres belajar bisnis anak, lihat usaha yang aktif, dan beri arahan saat diperlukan."
           action={<div className="rounded-full bg-danger/10 px-4 py-2 text-sm font-semibold text-danger">3 notifikasi aktif</div>}
         />
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-3">
           <Link
-            href="/parent/children/new"
+            href={appRoutes.parent.children}
+            className="inline-flex min-h-11 items-center rounded-full border border-border-subtle bg-background px-5 text-sm font-semibold text-foreground shadow-sm"
+          >
+            Keluarga & anak
+          </Link>
+          <Link
+            href={appRoutes.parent.childrenNew}
             className="inline-flex min-h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground"
           >
             + Buat Profil Anak

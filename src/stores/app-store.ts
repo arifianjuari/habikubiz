@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 import { SEED_CHILD_NAYA_ID, SEED_FIRST_BUSINESS_ID } from "@/lib/demo-context";
 
@@ -14,12 +15,25 @@ interface AppState {
   setActiveBusinessId: (businessId: string | null) => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  mode: "parent",
-  activeChildId: SEED_CHILD_NAYA_ID,
-  activeBusinessId: SEED_FIRST_BUSINESS_ID,
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      mode: "parent",
+      activeChildId: SEED_CHILD_NAYA_ID,
+      activeBusinessId: SEED_FIRST_BUSINESS_ID,
 
-  setMode: (mode) => set({ mode }),
-  setActiveChildId: (childId) => set({ activeChildId: childId }),
-  setActiveBusinessId: (businessId) => set({ activeBusinessId: businessId }),
-}));
+      setMode: (mode) => set({ mode }),
+      setActiveChildId: (childId) => set({ activeChildId: childId }),
+      setActiveBusinessId: (businessId) => set({ activeBusinessId: businessId }),
+    }),
+    {
+      name: "habikubiz-app",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        mode: state.mode,
+        activeChildId: state.activeChildId,
+        activeBusinessId: state.activeBusinessId,
+      }),
+    },
+  ),
+);

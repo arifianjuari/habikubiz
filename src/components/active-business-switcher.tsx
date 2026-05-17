@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import { updateLastActiveSelection } from "@/server/actions/profile-preferences.actions";
 import { useAppStore } from "@/stores/app-store";
 
 export interface BusinessPickerRow {
@@ -25,7 +26,11 @@ export function ActiveBusinessSwitcher({ businesses }: { businesses: readonly Bu
       <div className="text-xs font-semibold uppercase text-muted-foreground">Usaha aktif</div>
       <select
         value={activeBusinessId ?? ""}
-        onChange={(e) => setActiveBusinessId(e.target.value || null)}
+        onChange={(e) => {
+          const v = e.target.value || null;
+          setActiveBusinessId(v);
+          void updateLastActiveSelection(activeChildId, v);
+        }}
         className="mt-3 w-full rounded-xl border border-border-subtle px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
         aria-label="Pilih usaha aktif"
       >
