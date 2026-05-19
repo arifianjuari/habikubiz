@@ -25,7 +25,7 @@ export function LoginForm() {
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
       toast.message("Mode demo", {
-        description: "NEXT_PUBLIC_SUPABASE_URL / KEY belum diset — lanjut ke dashboard contoh.",
+        description: "NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY belum diset — lanjut ke dashboard contoh.",
       });
       router.push("/parent/dashboard");
       return;
